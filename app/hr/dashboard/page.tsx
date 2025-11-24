@@ -33,18 +33,18 @@ function HRDashboardContent() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">In Screening</CardTitle>
+            <CardTitle className="text-sm font-medium">Shortlisted</CardTitle>
           </CardHeader>
           <CardContent>
-            {statsLoading ? <Skeleton className="h-8 w-16" /> : <div className="text-2xl font-bold">{stats?.candidates_by_status?.screening || 0}</div>}
+            {statsLoading ? <Skeleton className="h-8 w-16" /> : <div className="text-2xl font-bold">{stats?.candidates_by_status?.shortlisted || 0}</div>}
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">In Interviews</CardTitle>
+            <CardTitle className="text-sm font-medium">Interviewed</CardTitle>
           </CardHeader>
           <CardContent>
-            {statsLoading ? <Skeleton className="h-8 w-16" /> : <div className="text-2xl font-bold">{stats?.candidates_by_status?.interview || 0}</div>}
+            {statsLoading ? <Skeleton className="h-8 w-16" /> : <div className="text-2xl font-bold">{stats?.candidates_by_status?.interviewed || 0}</div>}
           </CardContent>
         </Card>
       </div>

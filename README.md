@@ -1,230 +1,457 @@
-# AI Interviewer Frontend# AI Interviewer Frontend# AI Interviewer Frontend# AI Interviewer Frontend
+# AI Interviewer Platform - Frontend# AI Interviewer Frontend# AI Interviewer Frontend# AI Interviewer Frontend# AI Interviewer Frontend
 
 
 
-Production-ready Next.js application for the AI Interviewer platform. Complete integration with 45+ backend API endpoints supporting multi-tenant SaaS with 4 user roles (Admin, HR, Employee, Candidate).
+Production-ready Next.js application for the AI Interviewer platform. Complete integration with 45+ backend API endpoints supporting multi-tenant SaaS with 4 user roles.
 
 
 
-## Quick StartProduction-ready Next.js application for AI Interviewer platform. Complete integration with 45+ backend API endpoints for candidate management, interview scheduling, and analytics.
+## 🚀 Quick StartProduction-ready Next.js application for the AI Interviewer platform. Complete integration with 45+ backend API endpoints supporting multi-tenant SaaS with 4 user roles (Admin, HR, Employee, Candidate).
 
 
 
 ### Prerequisites
 
-- Node.js 16 or higher
+- Node.js 16+ installed
 
-- Backend API running on http://localhost:8000/api/v1## Quick StartProduction-ready Next.js application for AI Interviewer platform. Complete integration with 45+ backend API endpoints for candidate management, interview scheduling, and analytics.Production-ready Next.js application for AI Interviewer platform. Complete integration with 45+ backend API endpoints for candidate management, interview scheduling, and analytics.
-
-- Docker (optional, for containerized deployment)
+- Backend API running on `http://localhost:8000`## Quick StartProduction-ready Next.js application for AI Interviewer platform. Complete integration with 45+ backend API endpoints for candidate management, interview scheduling, and analytics.
 
 
 
 ### Installation
 
-### Prerequisites
 
-```bash
+
+```bash### Prerequisites
+
+# Install dependencies
 
 npm install- Node.js 16 or higher
 
+
+
+# Start development server- Backend API running on http://localhost:8000/api/v1## Quick StartProduction-ready Next.js application for AI Interviewer platform. Complete integration with 45+ backend API endpoints for candidate management, interview scheduling, and analytics.Production-ready Next.js application for AI Interviewer platform. Complete integration with 45+ backend API endpoints for candidate management, interview scheduling, and analytics.
+
 npm run dev
 
-```- Backend API running on http://localhost:8000## Quick Start## Quick Start
+- Docker (optional, for containerized deployment)
 
-
-
-Access at http://localhost:3000- Docker (optional, for containerized deployment)
-
-
-
-### Environment Setup
-
-
-
-Create `.env.local`:### Installation
-
-
-
-```env### Prerequisites### Prerequisites
-
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
-
-NEXT_PUBLIC_API_TIMEOUT=30000```bash
-
-NODE_ENV=development
-
-```npm install- Node.js 16 or higher- Node.js 16+ installed
-
-
-
-### Dockernpm run dev
-
-
-
-```bash```- Backend API running on http://localhost:8000- Backend running on `http://localhost:8000`
-
-# Production
-
-docker compose up --build
-
-
-
-# Development with hot reloadAccess the application at http://localhost:3000
-
-docker compose -f docker-compose.dev.yml up --build
+# Access at http://localhost:3000
 
 ```
 
 
 
-## Demo Credentials### Using Docker### Installation### Installation & Launch
+### Environment Setup### Installation
 
 
 
-| Role     | Email                    | Password      |
+Create `.env.local`:### Prerequisites
+
+```env
+
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1```bash
+
+NEXT_PUBLIC_API_TIMEOUT=30000
+
+```npm install- Node.js 16 or higher
+
+
+
+## 👤 Demo Credentialsnpm run dev
+
+
+
+| Role     | Email                    | Password      |```- Backend API running on http://localhost:8000## Quick Start## Quick Start
 
 |----------|--------------------------|---------------|
 
-| Admin    | admin@aiinterviewer.com  | AdminPass123!@ |```bash
+| Admin    | admin@aiinterviewer.com  | AdminPass123!@ |
 
 | HR       | hr@testcorp.com          | HRPass123!@   |
 
-| Employee | john@testcorp.com        | EmpPass123!@  |# Production
+| Employee | john@testcorp.com        | EmpPass123!@  |Access at http://localhost:3000- Docker (optional, for containerized deployment)
 
 | Candidate| jane@aiinterviewer.com   | CandPass123!@ |
 
-docker compose up --build```bash```bash
-
-## User Roles & Permissions
 
 
+## 📋 Features
 
-### Admin
+### Environment Setup
 
-- Full platform control# Development with hot reloadnpm install# Install dependencies
+### Authentication
 
-- Create and manage companies
+- ✅ JWT-based login/logout
 
-- View all users and audit logsdocker compose -f docker-compose.dev.yml up --build
+- ✅ Automatic token refresh on 401
 
-- System health monitoring
+- ✅ Session persistenceCreate `.env.local`:### Installation
 
-```npm run devnpm install
+- ✅ Email verification workflow
 
-### HR
-
-- Manage company users
-
-- Create and invite employees
-
-- Manage candidates### Environment Configuration```
-
-- Schedule and track interviews
-
-- View analytics and reports
-
-- Email management
-
-Create `.env.local` in the project root:# Start development server
-
-### Employee
-
-- Conduct interviews
-
-- Score candidates
-
-- View assigned interviews```envAccess the application at http://localhost:3000npm run dev
-
-- Dashboard with upcoming interviews
-
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
-
-### Candidate
-
-- View own interview scheduleNEXT_PUBLIC_API_TIMEOUT=30000
-
-- Check interview status
-
-- Attend scheduled interviews```
+- ✅ Role-based access control
 
 
 
-## Application Architecture### Environment Configuration# Open in browser
+### Candidate Management```env### Prerequisites### Prerequisites
+
+- ✅ Full CRUD operations
+
+- ✅ Search & filter by status/domainNEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+
+- ✅ Bulk import from CSV/Excel
+
+- ✅ Candidate status tracking (applied, shortlisted, interviewed, rejected, hired)NEXT_PUBLIC_API_TIMEOUT=30000```bash
+
+- ✅ Interview history
+
+NODE_ENV=development
+
+### Interview Management
+
+- ✅ Schedule interviews with timezone support```npm install- Node.js 16 or higher- Node.js 16+ installed
+
+- ✅ Batch scheduling
+
+- ✅ Reschedule/cancel interviews
+
+- ✅ Interview timer during conduction
+
+- ✅ Evaluation scoring system### Dockernpm run dev
 
 
 
-### Directory Structure## Demo Credentials
+### Analytics & Reporting
+
+- ✅ Candidate funnel visualization
+
+- ✅ Time-to-hire metrics```bash```- Backend API running on http://localhost:8000- Backend running on `http://localhost:8000`
+
+- ✅ Status distribution
+
+- ✅ Dashboard statistics# Production
 
 
 
-```# http://localhost:3000
+### User Managementdocker compose up --build
+
+- ✅ Employee directory
+
+- ✅ Create/update/delete users
+
+- ✅ Role-based access
+
+- ✅ Password management# Development with hot reloadAccess the application at http://localhost:3000
+
+
+
+## 🏗️ Architecturedocker compose -f docker-compose.dev.yml up --build
+
+
+
+``````
 
 src/
 
-├── lib/| Role     | Email                    | Password      |
+├── lib/
 
-│   ├── api-client.ts              # Axios with interceptors & token refresh
+│   ├── api-client.ts       - Axios with JWT interceptors
 
-│   ├── config.ts                  # Centralized config|----------|--------------------------|---------------|Create `.env.local` in the project root:```
-
-│   ├── error-handler.ts           # Error handling
-
-│   └── utils-advanced.ts          # Utility functions| Admin    | admin@aiinterviewer.com  | AdminPass123!@ |
+│   └── utils.ts            - Utility functions## Demo Credentials### Using Docker### Installation### Installation & Launch
 
 ├── services/
 
-│   ├── auth.service.ts            # Authentication (login, refresh, verify)| HR       | hr@testcorp.com          | HRPass123!@   |
+│   ├── auth.service.ts     - Authentication
 
-│   ├── users.service.ts           # User CRUD
+│   ├── users.service.ts    - User management
 
-│   ├── candidates.service.ts      # Candidate management| Employee | john@testcorp.com        | EmpPass123!@  |
+│   ├── candidates.service.ts - Candidate operations| Role     | Email                    | Password      |
 
-│   ├── interviews.service.ts      # Interview scheduling
+│   ├── interviews.service.ts - Interview scheduling
 
-│   └── company.service.ts         # Company operations```env### Demo Credentials
+│   └── company.service.ts  - Company operations|----------|--------------------------|---------------|
 
 ├── hooks/
 
-│   ├── use-auth.ts                # Auth mutations## Application Pages
+│   ├── use-candidates.ts   - React Query hooks| Admin    | admin@aiinterviewer.com  | AdminPass123!@ |```bash
 
-│   ├── use-users.ts               # User queries/mutations
+│   ├── use-interviews.ts   - Interview hooks
 
-│   ├── use-candidates.ts          # Candidate queries/mutationsNEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1```
-
-│   ├── use-interviews.ts          # Interview queries/mutations
-
-│   └── use-company.ts             # Company queries/mutations### Auth
+│   └── use-users.ts        - User hooks| HR       | hr@testcorp.com          | HRPass123!@   |
 
 ├── contexts/
 
-│   └── AuthContext.tsx            # Global auth state- **Login** (`/login`) - JWT authentication with email and passwordNEXT_PUBLIC_API_TIMEOUT=30000Admin:    admin@aiinterviewer.com / AdminPass123!@
+│   └── AuthContext.tsx     - Global auth state| Employee | john@testcorp.com        | EmpPass123!@  |# Production
 
 └── components/
 
+    ├── ProtectedRoute.tsx  - Role-based routing| Candidate| jane@aiinterviewer.com   | CandPass123!@ |
+
+    ├── layout/AdminLayout.tsx
+
+    └── ui/                 - shadcn-ui componentsdocker compose up --build```bash```bash
+
+
+
+app/## User Roles & Permissions
+
+├── login/page.tsx          - Authentication
+
+├── admin/dashboard/page.tsx - Admin portal
+
+├── hr/dashboard/page.tsx   - HR portal
+
+├── employee/interviews/page.tsx - Employee portal### Admin
+
+├── candidate/dashboard/page.tsx - Candidate portal
+
+├── candidates/page.tsx     - Candidate management- Full platform control# Development with hot reloadnpm install# Install dependencies
+
+├── employees/page.tsx      - Employee management
+
+└── interviews/page.tsx     - Interview scheduling- Create and manage companies
+
+```
+
+- View all users and audit logsdocker compose -f docker-compose.dev.yml up --build
+
+## 🔐 Security
+
+- System health monitoring
+
+- ✅ Access tokens in memory (cleared on refresh)
+
+- ✅ Refresh tokens in HTTPOnly cookies```npm run devnpm install
+
+- ✅ Multi-tenant isolation
+
+- ✅ Protected routes with role checking### HR
+
+- ✅ Automatic 401 handling with token refresh
+
+- ✅ Form validation (client + server)- Manage company users
+
+
+
+## 📱 Pages- Create and invite employees
+
+
+
+### Admin- Manage candidates### Environment Configuration```
+
+- `/admin/dashboard` - System overview
+
+- `/admin/companies` - Company management- Schedule and track interviews
+
+- `/admin/logs` - Audit logs
+
+- View analytics and reports
+
+### HR
+
+- `/hr/dashboard` - Pipeline overview- Email management
+
+- `/candidates` - Candidate management
+
+- `/employees` - Employee managementCreate `.env.local` in the project root:# Start development server
+
+- `/interviews` - Interview scheduling
+
+- `/reports` - Analytics### Employee
+
+
+
+### Employee- Conduct interviews
+
+- `/employee/dashboard` - Overview
+
+- `/employee/interviews` - Assigned interviews- Score candidates
+
+- `/interviews/[id]` - Conduct interview
+
+- View assigned interviews```envAccess the application at http://localhost:3000npm run dev
+
+### Candidate
+
+- `/candidate/dashboard` - Status overview- Dashboard with upcoming interviews
+
+- `/candidate/interviews` - Interview schedule
+
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+
+## 🛠️ Tech Stack
+
+### Candidate
+
+- **Framework**: Next.js 15
+
+- **Language**: TypeScript- View own interview scheduleNEXT_PUBLIC_API_TIMEOUT=30000
+
+- **Styling**: Tailwind CSS + shadcn-ui
+
+- **HTTP Client**: Axios- Check interview status
+
+- **State Management**: React Context + React Query
+
+- **Notifications**: Sonner- Attend scheduled interviews```
+
+- **Icons**: Lucide React
+
+- **Validation**: Zod
+
+
+
+## 📊 API Integration (45+ Endpoints)## Application Architecture### Environment Configuration# Open in browser
+
+
+
+- Authentication (5 endpoints)
+
+- Users (7 endpoints)
+
+- Candidates (11 endpoints)### Directory Structure## Demo Credentials
+
+- Interviews (15 endpoints)
+
+- Scores (3 endpoints)
+
+- Companies (3 endpoints)
+
+```# http://localhost:3000
+
+## 🔨 Development
+
+src/
+
+### Build for Production
+
+```bash├── lib/| Role     | Email                    | Password      |
+
+npm run build
+
+npm start│   ├── api-client.ts              # Axios with interceptors & token refresh
+
+```
+
+│   ├── config.ts                  # Centralized config|----------|--------------------------|---------------|Create `.env.local` in the project root:```
+
+### Running Linter
+
+```bash│   ├── error-handler.ts           # Error handling
+
+npm run lint
+
+```│   └── utils-advanced.ts          # Utility functions| Admin    | admin@aiinterviewer.com  | AdminPass123!@ |
+
+
+
+### Docker├── services/
+
+```bash
+
+docker compose up --build│   ├── auth.service.ts            # Authentication (login, refresh, verify)| HR       | hr@testcorp.com          | HRPass123!@   |
+
+```
+
+│   ├── users.service.ts           # User CRUD
+
+## 🐛 Troubleshooting
+
+│   ├── candidates.service.ts      # Candidate management| Employee | john@testcorp.com        | EmpPass123!@  |
+
+### Backend Connection Issues
+
+1. Verify backend: `curl http://localhost:8000/health`│   ├── interviews.service.ts      # Interview scheduling
+
+2. Check `.env.local` configuration
+
+3. Ensure CORS enabled on backend│   └── company.service.ts         # Company operations```env### Demo Credentials
+
+4. Check DevTools Network tab
+
+├── hooks/
+
+### Authentication Issues
+
+1. Clear browser storage: `localStorage.clear()`│   ├── use-auth.ts                # Auth mutations## Application Pages
+
+2. Verify credentials with backend
+
+3. Check token expiration│   ├── use-users.ts               # User queries/mutations
+
+4. Ensure refresh endpoint working
+
+│   ├── use-candidates.ts          # Candidate queries/mutationsNEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1```
+
+### Data Not Loading
+
+1. Check React Query DevTools│   ├── use-interviews.ts          # Interview queries/mutations
+
+2. Verify API endpoints exist
+
+3. Check browser console errors│   └── use-company.ts             # Company queries/mutations### Auth
+
+4. Ensure role permissions
+
+├── contexts/
+
+## 📚 Documentation
+
+│   └── AuthContext.tsx            # Global auth state- **Login** (`/login`) - JWT authentication with email and passwordNEXT_PUBLIC_API_TIMEOUT=30000Admin:    admin@aiinterviewer.com / AdminPass123!@
+
+- [QUICKSTART.md](./QUICKSTART.md) - Quick start guide
+
+- [BUILD_SUMMARY.md](./BUILD_SUMMARY.md) - Detailed implementation└── components/
+
+- [IMPLEMENTATION_CHECKLIST.md](./IMPLEMENTATION_CHECKLIST.md) - Feature checklist
+
     ├── ProtectedRoute.tsx         # Role-based route wrapper- **Register** (`/register`) - Create new account with email verification
+
+## 📈 Status
 
     ├── layout/
 
-    ├── dashboard/```HR:       hr@testcorp.com / HRPass123!@
+✅ All 45+ API endpoints connected  
 
-    ├── employees/
+✅ Production-ready code      ├── dashboard/```HR:       hr@testcorp.com / HRPass123!@
+
+✅ Complete documentation  
+
+✅ Zero mock data      ├── employees/
+
+✅ Error handling implemented  
 
     ├── ui/                        # shadcn-ui components### Dashboard & Analytics
 
+## ⚙️ Browser Support
 
 
-app/- **Dashboard** (`/dashboard`) - Overview with metrics and employee directoryEmployee: john@testcorp.com / EmpPass123!@
 
-├── login/page.tsx                 # Login page
+- Chrome/Edge 90+
 
-├── dashboard/page.tsx             # Dashboard- **Reports** (`/reports`) - Candidate funnel, time-to-hire, analytics
+- Firefox 88+app/- **Dashboard** (`/dashboard`) - Overview with metrics and employee directoryEmployee: john@testcorp.com / EmpPass123!@
 
-├── candidates/page.tsx            # Candidates list
+- Safari 14+
 
-├── employees/page.tsx             # User management- **Settings** (`/settings`) - Account management and logoutFor production deployments, update the API base URL accordingly.```
+- Mobile browsers├── login/page.tsx                 # Login page
 
-├── interviews/page.tsx            # Interview scheduling
+
+
+## 📄 License├── dashboard/page.tsx             # Dashboard- **Reports** (`/reports`) - Candidate funnel, time-to-hire, analytics
+
+
+
+Internal use only - AI Interviewer Platform├── candidates/page.tsx            # Candidates list
+
+
+
+## 💬 Support├── employees/page.tsx             # User management- **Settings** (`/settings`) - Account management and logoutFor production deployments, update the API base URL accordingly.```
+
+
+
+Contact the development team for technical support.├── interviews/page.tsx            # Interview scheduling
+
 
 └── settings/page.tsx              # Settings & logout
 

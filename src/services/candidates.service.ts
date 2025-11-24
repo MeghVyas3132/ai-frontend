@@ -1,6 +1,6 @@
 import apiClient from '@/lib/api-client';
 
-export type CandidateStatus = 'applied' | 'screening' | 'assessment' | 'interview' | 'offer' | 'accepted' | 'rejected' | 'withdrawn' | 'on_hold';
+export type CandidateStatus = 'applied' | 'shortlisted' | 'interviewed' | 'rejected' | 'hired';
 
 export interface Candidate {
   id: string;
@@ -11,6 +11,8 @@ export interface Candidate {
   status: CandidateStatus;
   source?: string;
   domain?: string;
+  position?: string;
+  experience_years?: number;
   qualifications?: string;
   company_id: string;
   created_at: string;
@@ -25,6 +27,8 @@ export interface CreateCandidateRequest {
   status?: CandidateStatus;
   source?: string;
   domain?: string;
+  position?: string;
+  experience_years?: number;
   qualifications?: string;
 }
 
@@ -35,12 +39,15 @@ export interface UpdateCandidateRequest {
   phone?: string;
   status?: CandidateStatus;
   domain?: string;
+  position?: string;
+  experience_years?: number;
   qualifications?: string;
 }
 
 export interface BulkImportRequest {
   candidates: CreateCandidateRequest[];
   domain?: string;
+  send_invitations?: boolean;
 }
 
 export interface BulkImportResponse {
@@ -53,7 +60,13 @@ export interface BulkImportResponse {
 export interface BulkImportJobResponse {
   job_id: string;
   status: string;
-  created_at: string;
+  total_records: number;
+  created_count: number;
+  failed_count: number;
+  success_rate?: number;
+  processing_start?: string;
+  processing_end?: string;
+  processing_duration_seconds?: number;
   celery_task_id?: string;
 }
 
@@ -67,9 +80,11 @@ export interface ListCandidatesResponse {
 export interface DashboardStats {
   total_candidates: number;
   candidates_by_status: Record<CandidateStatus, number>;
-  candidates_by_domain: Record<string, number>;
-  conversion_rate: number;
-  pending_feedback: number;
+  candidates_by_domain?: Record<string, number>;
+  average_days_to_hire?: number;
+  active_interviews?: number;
+  pending_feedback?: number;
+  conversion_rate?: number;
 }
 
 export interface FunnelAnalytics {
@@ -77,16 +92,16 @@ export interface FunnelAnalytics {
     stage: CandidateStatus;
     count: number;
     percentage: number;
-    drop_off_rate: number;
+    drop_off_rate?: number;
   }>;
-  overall_acceptance_rate: number;
+  overall_acceptance_rate?: number;
 }
 
 export interface TimeToHireMetrics {
   average_days_to_hire: number;
   median_days_to_hire: number;
-  by_department: Record<string, { average: number; median: number }>;
-  message: string;
+  by_department?: Record<string, { average: number; median: number }>;
+  message?: string;
 }
 
 export interface BulkEmailRequest {

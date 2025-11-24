@@ -3,6 +3,16 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
 const API_TIMEOUT = parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '30000', 10);
 
+// Store access token in memory (cleared on page refresh, safer than localStorage)
+let accessTokenInMemory: string | null = null;
+
+// Getter and setter for access token
+export const setAccessToken = (token: string | null) => {
+  accessTokenInMemory = token;
+};
+
+export const getAccessToken = () => accessTokenInMemory;
+
 // Create axios instance
 export const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -10,17 +20,15 @@ export const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Important for cookies
+  withCredentials: true, // Important for cookies (refresh token is httpOnly)
 });
 
-// Request interceptor - Add auth token
+// Request interceptor - Add auth token from memory
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    const token = accessTokenInMemory;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -42,26 +50,24 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-            refresh_token: refreshToken,
-          });
+        // POST to /auth/refresh without sending refresh_token (it's in httpOnly cookie)
+        const response = await axios.post<{ access_token: string; refresh_token?: string }>(
+          `${API_BASE_URL}/auth/refresh`,
+          {},
+          { withCredentials: true } // Send cookies
+        );
 
-          const { access_token, refresh_token: newRefreshToken } = response.data;
-          localStorage.setItem('access_token', access_token);
-          localStorage.setItem('refresh_token', newRefreshToken);
+        const { access_token } = response.data;
+        accessTokenInMemory = access_token;
 
-          // Retry original request
-          originalRequest.headers.Authorization = `Bearer ${access_token}`;
-          return apiClient(originalRequest);
-        }
+        // Retry original request with new token
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+        return apiClient(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
+        // Refresh failed, clear state and redirect to login
+        accessTokenInMemory = null;
         if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('user');
           window.location.href = '/login';
         }
         return Promise.reject(refreshError);

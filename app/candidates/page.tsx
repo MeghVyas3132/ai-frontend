@@ -43,14 +43,10 @@ import { Candidate, CandidateStatus } from '@/services/candidates.service';
 
 const statusColors: Record<CandidateStatus, string> = {
   applied: 'bg-blue-100 text-blue-800',
-  screening: 'bg-yellow-100 text-yellow-800',
-  assessment: 'bg-purple-100 text-purple-800',
-  interview: 'bg-cyan-100 text-cyan-800',
-  offer: 'bg-green-100 text-green-800',
-  accepted: 'bg-emerald-100 text-emerald-800',
+  shortlisted: 'bg-yellow-100 text-yellow-800',
+  interviewed: 'bg-cyan-100 text-cyan-800',
   rejected: 'bg-red-100 text-red-800',
-  withdrawn: 'bg-gray-100 text-gray-800',
-  on_hold: 'bg-orange-100 text-orange-800',
+  hired: 'bg-emerald-100 text-emerald-800',
 };
 
 interface EditCandidateDialogProps {
@@ -429,14 +425,10 @@ function CandidatesTable() {
         >
           <option value="">All Status</option>
           <option value="applied">Applied</option>
-          <option value="screening">Screening</option>
-          <option value="assessment">Assessment</option>
-          <option value="interview">Interview</option>
-          <option value="offer">Offer</option>
-          <option value="accepted">Accepted</option>
+          <option value="shortlisted">Shortlisted</option>
+          <option value="interviewed">Interviewed</option>
           <option value="rejected">Rejected</option>
-          <option value="withdrawn">Withdrawn</option>
-          <option value="on_hold">On Hold</option>
+          <option value="hired">Hired</option>
         </select>
       </div>
 

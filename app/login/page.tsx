@@ -21,11 +21,15 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      const redirectUrl = user.role === "ADMIN" ? "/admin/dashboard" 
+                         : user.role === "HR" ? "/hr/dashboard"
+                         : user.role === "EMPLOYEE" ? "/employee/dashboard"
+                         : "/candidate/dashboard";
+      router.push(redirectUrl);
     }
   }, [user, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -39,8 +43,12 @@ export default function Login() {
       
       if (result.success) {
         toast.success("Login successful!");
-        // Small delay to allow state update
-        setTimeout(() => router.push("/dashboard"), 500);
+        // Redirect based on role
+        const redirectUrl = user?.role === "ADMIN" ? "/admin/dashboard" 
+                           : user?.role === "HR" ? "/hr/dashboard"
+                           : user?.role === "EMPLOYEE" ? "/employee/dashboard"
+                           : "/candidate/dashboard";
+        setTimeout(() => router.push(redirectUrl), 500);
       } else {
         toast.error(result.error || "Login failed");
       }

@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import authService from "@/services/auth.service";
 import { AxiosError } from "axios";
+import { setAccessToken as setApiAccessToken } from "@/lib/api-client";
 
 export type UserRole = "ADMIN" | "HR" | "EMPLOYEE" | "CANDIDATE";
 
@@ -17,6 +18,7 @@ export interface User {
 
 interface AuthContextType {
   user: User | null;
+  accessToken: string | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   isLoading: boolean;
@@ -29,48 +31,49 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize from localStorage
+  // Initialize from sessionStorage (user info only)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        const storedUser = localStorage.getItem("user");
-        const accessToken = localStorage.getItem("access_token");
+        const storedUser = sessionStorage.getItem("user");
         
-        if (storedUser && accessToken) {
+        if (storedUser) {
           setUser(JSON.parse(storedUser));
+          // Note: access_token is stored in memory only, so it won't persist on refresh
+          // This forces re-authentication which is more secure
         }
       } catch (err) {
         console.error("Failed to restore user session:", err);
-        localStorage.removeItem("user");
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
+        sessionStorage.removeItem("user");
       }
       setIsLoading(false);
     }
   }, []);
 
+  const setTokensLocally = useCallback((newAccessToken: string) => {
+    setAccessToken(newAccessToken);
+    setApiAccessToken(newAccessToken); // Sync with api-client
+  }, []);
+
   const refreshTokens = useCallback(async () => {
     try {
-      const refreshToken = localStorage.getItem("refresh_token");
-      if (!refreshToken) {
-        throw new Error("No refresh token available");
-      }
-
-      const response = await authService.refreshToken(refreshToken);
-      localStorage.setItem("access_token", response.access_token);
-      localStorage.setItem("refresh_token", response.refresh_token);
+      // Refresh token comes from httpOnly cookie (sent automatically by browser)
+      const response = await authService.refreshToken("");
+      setTokensLocally(response.access_token);
     } catch (err) {
       // Refresh failed, clear auth state
-      localStorage.removeItem("user");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
+      sessionStorage.removeItem("user");
+      setAccessToken(null);
+      setApiAccessToken(null);
       setUser(null);
       setError("Session expired. Please login again.");
+      throw err;
     }
-  }, []);
+  }, [setTokensLocally]);
 
   const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
@@ -79,11 +82,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await authService.login({ email, password });
 
-      // Store tokens
-      localStorage.setItem("access_token", response.access_token);
-      localStorage.setItem("refresh_token", response.refresh_token);
+      // Store access token in memory and sync with api-client
+      setTokensLocally(response.access_token);
+      // Refresh token is stored in httpOnly cookie by backend
 
-      // Extract user info from token or response
+      // Extract user info
       const userData: User = {
         id: response.user?.id || "",
         email: response.user?.email || email,
@@ -93,7 +96,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         department: response.user?.department || undefined,
       };
 
-      localStorage.setItem("user", JSON.stringify(userData));
+      // Store user in sessionStorage (cleared on browser close)
+      sessionStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       setIsLoading(false);
       return { success: true };
@@ -104,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading(false);
       return { success: false, error: errorMessage };
     }
-  }, []);
+  }, [setTokensLocally]);
 
   const logout = useCallback(async () => {
     try {
@@ -112,9 +116,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err) {
       console.error("Logout API call failed:", err);
     } finally {
-      localStorage.removeItem("user");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
+      sessionStorage.removeItem("user");
+      setAccessToken(null);
+      setApiAccessToken(null);
       setUser(null);
       setError(null);
     }
@@ -124,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider
       value={{
         user,
+        accessToken,
         login,
         logout,
         isLoading,
