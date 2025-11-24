@@ -10,41 +10,60 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, MoreVertical, Edit, Trash2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Search, MoreVertical, Edit, Trash2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useListUsers, useDeleteUser } from "@/hooks/use-users";
+import { toast } from "sonner";
 
 interface Employee {
   id: string;
   name: string;
   email: string;
   role: string;
-  department: string;
-  status: "active" | "inactive";
-  joinDate: string;
+  department?: string;
+  created_at: string;
 }
-
-const mockEmployees: Employee[] = [
-  { id: "1", name: "John Doe", email: "john.doe@aigenthix.com", role: "Senior Developer", department: "Engineering", status: "active", joinDate: "2023-01-15" },
-  { id: "2", name: "Jane Smith", email: "jane.smith@aigenthix.com", role: "Product Manager", department: "Product", status: "active", joinDate: "2023-03-20" },
-  { id: "3", name: "Mike Johnson", email: "mike.j@aigenthix.com", role: "Designer", department: "Design", status: "active", joinDate: "2023-05-10" },
-  { id: "4", name: "Sarah Williams", email: "sarah.w@aigenthix.com", role: "Marketing Lead", department: "Marketing", status: "inactive", joinDate: "2022-11-05" },
-  { id: "5", name: "David Brown", email: "david.b@aigenthix.com", role: "Data Analyst", department: "Analytics", status: "active", joinDate: "2023-07-01" },
-];
 
 const EmployeeTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [employees] = useState<Employee[]>(mockEmployees);
+  const [skip, setSkip] = useState(0);
+  const { data, isLoading, error } = useListUsers({ skip, limit: 20 });
+  const { mutate: deleteUser } = useDeleteUser("");
 
-  const filteredEmployees = employees.filter((emp) =>
+  const filteredEmployees = (data?.users || []).filter((emp) =>
     emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     emp.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    emp.department.toLowerCase().includes(searchQuery.toLowerCase())
+    emp.department?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDelete = (userId: string) => {
+    if (confirm("Are you sure you want to delete this employee?")) {
+      deleteUser(undefined, {
+        onSuccess: () => {
+          toast.success("Employee deleted successfully");
+        },
+        onError: () => {
+          toast.error("Failed to delete employee");
+        },
+      });
+    }
+  };
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>Failed to load employees. Please try again.</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -58,7 +77,7 @@ const EmployeeTable = () => {
         />
       </div>
 
-      <div className="rounded-lg border border-border bg-card">
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -66,55 +85,87 @@ const EmployeeTable = () => {
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Department</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead>Join Date</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredEmployees.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell className="font-medium">{employee.name}</TableCell>
-                <TableCell className="text-muted-foreground">{employee.email}</TableCell>
-                <TableCell>{employee.role}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={employee.status === "active" ? "default" : "secondary"}
-                    className={employee.status === "active" ? "bg-success" : ""}
-                  >
-                    {employee.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-muted-foreground">{employee.joinDate}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 6 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <Skeleton className="h-4 w-20" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : filteredEmployees && filteredEmployees.length > 0 ? (
+              filteredEmployees.map((employee) => (
+                <TableRow key={employee.id}>
+                  <TableCell className="font-medium">{employee.name}</TableCell>
+                  <TableCell className="text-muted-foreground">{employee.email}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{employee.role}</Badge>
+                  </TableCell>
+                  <TableCell>{employee.department || "-"}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {new Date(employee.created_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => handleDelete(employee.id)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-8">
+                  <p className="text-muted-foreground">No employees found</p>
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
 
-      {filteredEmployees.length === 0 && (
-        <div className="py-12 text-center">
-          <p className="text-muted-foreground">No employees found</p>
+      {data && data.total > 20 && (
+        <div className="flex gap-2 justify-center">
+          <Button
+            variant="outline"
+            onClick={() => setSkip(Math.max(0, skip - 20))}
+            disabled={skip === 0}
+          >
+            Previous
+          </Button>
+          <span className="flex items-center px-4 text-sm">
+            Page {Math.floor(skip / 20) + 1} of {Math.ceil(data.total / 20)}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() => setSkip(skip + 20)}
+            disabled={skip + 20 >= data.total}
+          >
+            Next
+          </Button>
         </div>
       )}
     </div>

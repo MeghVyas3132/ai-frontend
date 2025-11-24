@@ -34,16 +34,22 @@ export default function Login() {
     }
 
     setIsLoading(true);
-    const result = await login(email, password);
-    
-    if (result.success) {
-      toast.success("Login successful!");
-      router.push("/dashboard");
-    } else {
-      toast.error(result.error || "Login failed");
+    try {
+      const result = await login(email, password);
+      
+      if (result.success) {
+        toast.success("Login successful!");
+        // Small delay to allow state update
+        setTimeout(() => router.push("/dashboard"), 500);
+      } else {
+        toast.error(result.error || "Login failed");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   if (authLoading) {
@@ -117,8 +123,9 @@ export default function Login() {
           <div className="mt-8 rounded-lg border border-border bg-muted/30 p-4">
             <p className="mb-2 text-sm font-medium">Demo Credentials:</p>
             <div className="space-y-1 text-xs text-muted-foreground">
-              <p>Admin: admin@aigenthix.com / admin123</p>
-              <p>Employee: employee@aigenthix.com / employee123</p>
+              <p>Admin: admin@aiinterviewer.com / AdminPass123!@</p>
+              <p>HR: hr@testcorp.com / HRPass123!@</p>
+              <p>Employee: john@testcorp.com / EmpPass123!@</p>
             </div>
           </div>
         </div>

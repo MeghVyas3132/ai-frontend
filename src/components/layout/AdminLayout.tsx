@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, FileText, Settings, LogOut, UserSearch } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, FileText, Settings, LogOut, UserSearch, Briefcase, BarChart3, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import Image from "next/image";
 import logo from "@/assets/aigenthix-logo.png";
@@ -33,10 +33,27 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   const navItems = [
+    // Common
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-    { icon: Users, label: "Employee Management", path: "/employees", adminOnly: true },
     { icon: UserSearch, label: "Candidates", path: "/candidates" },
     { icon: FileText, label: "Reports", path: "/reports" },
+    
+    // Admin Only
+    { icon: Shield, label: "Admin Dashboard", path: "/admin/dashboard", roles: ["ADMIN"] },
+    { icon: Briefcase, label: "Companies", path: "/admin/companies", roles: ["ADMIN"] },
+    { icon: BarChart3, label: "Audit Logs", path: "/admin/logs", roles: ["ADMIN"] },
+    
+    // HR Only
+    { icon: BarChart3, label: "HR Dashboard", path: "/hr/dashboard", roles: ["HR"] },
+    
+    // Employee
+    { icon: Briefcase, label: "My Interviews", path: "/employee/interviews", roles: ["EMPLOYEE"] },
+    
+    // Candidate
+    { icon: Briefcase, label: "My Interviews", path: "/candidate/interviews", roles: ["CANDIDATE"] },
+    
+    // Common Bottom
+    { icon: Users, label: "Employee Management", path: "/employees", roles: ["ADMIN", "HR"] },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];
 
@@ -71,7 +88,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         {/* Navigation */}
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
           {navItems.map((item) => {
-            if (item.adminOnly && user?.role !== "admin") {
+            // Check if item has role restrictions
+            if (item.roles && !item.roles.includes(user?.role || "")) {
               return null;
             }
 
@@ -107,7 +125,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-semibold text-card-foreground">
-              {user?.role === "admin" ? "Admin Dashboard" : "Employee Dashboard"}
+              {user?.role === "ADMIN" && "Admin Dashboard"}
+              {user?.role === "HR" && "HR Portal"}
+              {user?.role === "EMPLOYEE" && "Employee Portal"}
+              {user?.role === "CANDIDATE" && "Candidate Portal"}
             </h1>
           </div>
 

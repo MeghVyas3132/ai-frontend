@@ -29,7 +29,7 @@ function EmployeesContent() {
 
 export default function Employees() {
   return (
-    <ProtectedRoute allowedRoles={["admin"]}>
+    <ProtectedRoute allowedRoles={["ADMIN"]}>
       <AdminLayout>
         <EmployeesContent />
       </AdminLayout>

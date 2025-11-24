@@ -1,12 +1,12 @@
 'use client';
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles?: ("admin" | "employee")[];
+  allowedRoles?: UserRole[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
@@ -37,6 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
         <div className="text-center">
           <h1 className="mb-4 text-4xl font-bold">Access Denied</h1>
           <p className="text-muted-foreground">You don't have permission to access this page.</p>
+          <p className="mt-4 text-sm text-muted-foreground">Required roles: {allowedRoles.join(', ')}</p>
         </div>
       </div>
     );
